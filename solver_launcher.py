@@ -3,7 +3,7 @@
 from mpi4py import MPI
 import imp
 import argparse
-
+import cProfile
 import src.utils
 
 parser = argparse.ArgumentParser()
@@ -23,6 +23,11 @@ parser.add_argument(
     "--statsdir",
     help="location to store statistics about game",
     action="store"
+)
+
+parser.add_argument(
+    "--cp",
+    action="store_true"
 )
 
 args = parser.parse_args()
@@ -93,6 +98,9 @@ if process.rank == process.root:
     )
     process.work.put(initial_job)
 
-process.run()
+if args.cp:
+    cProfile.run('process.run()', 'time')
+else:
+    process.run()
 
 comm.Barrier()
