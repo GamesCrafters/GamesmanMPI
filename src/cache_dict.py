@@ -77,3 +77,6 @@ class CacheDict:
 
     def __contains__(self, item):
         return item in self._file_dict
+
+    def __str__(self):
+        return str(self._cache)
