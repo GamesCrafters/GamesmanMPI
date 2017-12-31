@@ -3,7 +3,7 @@
 from mpi4py import MPI
 import imp
 import argparse
-
+import cProfile
 import src.utils
 
 parser = argparse.ArgumentParser()
@@ -33,6 +33,11 @@ parser.add_argument(
 parser.add_argument(
     '--init_pos',
     help='Initial position to start at for the game. If none is specified, the default is used.'
+)
+
+parser.add_argument(
+    "--cp",
+    action="store_true"
 )
 
 args = parser.parse_args()
@@ -153,6 +158,9 @@ if process.rank == process.root:
     # )
     process.work.put(initial_job)
 
-process.run()
+if args.cp:
+    cProfile.run('process.run()', 'time')
+else:
+    process.run()
 
 comm.Barrier()
